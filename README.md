@@ -469,16 +469,31 @@ python3 client.py
 ```text
 YOUR ANSWER HERE (Задание 2):
 - Имя, группа, номер (как вводили): Леонов Богдан, ИД24-1, 16
-- Фрагмент вывода сервера: [server] shared K = 6169
-  [server] decrypted: student_name=Леонов Богдан; student_group=ИД24-1; student_number=16; message=Hello from client (encrypted).
-  [server] student metadata: name=Леонов Богдан, group=ИД24-1, number=16
-  [server] response sent
-  [server] decrypted: Привет
-  [server] response sent
-- Фрагмент вывода клиента: [client] shared K = 6169
-  [client] decrypted server response: Hello, Леонов Богдан (group ИД24-1, number 16). Server received your encrypted message. Send more messages or empty line / quit on client to exit.
-  [client] сообщение> Привет
-  [client] ответ сервера: ECHO: Привет
+- Фрагмент вывода сервера: 
+
+python3 server.py
+[server] listening on 127.0.0.1:5050
+[server] connected by ('127.0.0.1', 64813)
+[server] shared K = 6169
+[server] decrypted: student_name=Леонов Богдан; student_group=ИД24-1; student_number=16; message=Hello from client (encrypted).
+[server] student metadata: name=Леонов Богдан, group=ИД24-1, number=16
+[server] response sent
+[server] decrypted: Привет
+[server] response sent
+
+- Фрагмент вывода клиента:
+
+python3 client.py
+Введите ваше имя (латиница/кириллица): Леонов Богдан
+Введите вашу группу: ИД24-1
+Введите ваш номер (в журнале/списке): 16
+[client] shared K = 6169
+[client] Режим чата: вводите сообщения; пустая строка или quit — выход.
+[client] decrypted server response: Hello, Леонов Богдан (group ИД24-1, number 16). Server received your encrypted message. Send more messages or empty line / quit on client to exit.
+[client] сообщение> Привет
+[client] ответ сервера: ECHO: Привет
+[client] сообщение> 
+
 - Совпадение K: да, у клиента и сервера в логах одинаковое значение 6169
 - Демонстрация преподавателю: да
 ```
@@ -533,14 +548,19 @@ thread.start()
 YOUR ANSWER HERE (Задание 3 — многопоточный сервер):
 - Файл создан: starter/multi-threaded-server.py — да
 - Кратко, что вынесли в handle_client: В handle_client вынесена вся логика одного клиентского сеанса: приём HELLO, вычисление B и общего ключа K, расшифровка первого сообщения с student_name/student_group/student_number, цикл обработки ciphertext_hex, ответы ECHO и завершение по bye.
-- Скриншот или фрагмент лога с двумя одновременными клиентами: [server] new connection from ('127.0.0.1', 65356)
-  [server ('127.0.0.1', 65356) Thread-1 (handle_client)] connected
-  [server ('127.0.0.1', 65356) Thread-1 (handle_client)] shared K = 6614
-  [server ('127.0.0.1', 65356) Thread-1 (handle_client)] decrypted: student_name=Леонов Богдан; student_group=ИД24-1; student_number=16; message=Hello from client (encrypted).
-  [server ('127.0.0.1', 65356) Thread-1 (handle_client)] student metadata: name=Леонов Богдан, group=ИД24-1, number=16
-  [server ('127.0.0.1', 65356) Thread-1 (handle_client)] response sent
-  [server ('127.0.0.1', 65356) Thread-1 (handle_client)] decrypted: Привет
-  [server ('127.0.0.1', 65356) Thread-1 (handle_client)] response sent
+- Скриншот или фрагмент лога с двумя одновременными клиентами:
+
+python3 multi-threaded-server.py
+[server] listening on 127.0.0.1:5050
+[server] new connection from ('127.0.0.1', 65356)
+[server ('127.0.0.1', 65356) Thread-1 (handle_client)] connected
+[server ('127.0.0.1', 65356) Thread-1 (handle_client)] shared K = 6614
+[server ('127.0.0.1', 65356) Thread-1 (handle_client)] decrypted: student_name=Леонов Богдан; student_group=ИД24-1; student_number=16; message=Hello from client (encrypted).
+[server ('127.0.0.1', 65356) Thread-1 (handle_client)] student metadata: name=Леонов Богдан, group=ИД24-1, number=16
+[server ('127.0.0.1', 65356) Thread-1 (handle_client)] response sent
+[server ('127.0.0.1', 65356) Thread-1 (handle_client)] decrypted: Привет
+[server ('127.0.0.1', 65356) Thread-1 (handle_client)] response sent
+
 - Проблемы (гонки вывода, ошибки) и как решили: критических ошибок не возникло; для наглядности в лог добавлен префикс с addr и именем потока.
 ```
 
