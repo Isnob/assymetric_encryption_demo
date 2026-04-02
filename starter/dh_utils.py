@@ -4,14 +4,13 @@ import hashlib
 def public_component(g: int, private_value: int, p: int) -> int:
     """Compute public value: g^private mod p."""
     # TODO(student): implement with modular exponentiation.
-    
-    return pow(????, private????_value, p)
+    return pow(g, private_value, p)
 
 
 def shared_secret(peer_public: int, private_value: int, p: int) -> int:
     """Compute shared secret: peer_public^private mod p."""
     # TODO(student): implement modular exponentiation.
-    return pow(peer_public, private_value, ????)
+    return pow(peer_public, private_value, p)
 
 
 def derive_key_material(shared_k: int, length: int = 32) -> bytes:

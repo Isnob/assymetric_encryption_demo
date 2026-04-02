@@ -5,7 +5,7 @@ import socket
 from dh_utils import derive_key_material, public_component, shared_secret, xor_bytes
 
 HOST = "127.0.0.1"
-PORT = 5000
+PORT = 5050
 
 
 def json_write(w, obj: dict) -> None:
@@ -75,7 +75,12 @@ def main() -> None:
 
                 if not first_done:
                     first_done = True
-                    if "student_name=" in plaintext:
+                    if (
+                        "student_name=" in plaintext
+                        and extract_field(plaintext, "student_name")
+                        and extract_field(plaintext, "student_group")
+                        and extract_field(plaintext, "student_number")
+                    ):
                         student_name = extract_field(plaintext, "student_name")
                         student_group = extract_field(plaintext, "student_group")
                         student_number = extract_field(plaintext, "student_number")
@@ -89,14 +94,17 @@ def main() -> None:
                             "Send more messages or empty line / quit on client to exit."
                         ).encode("utf-8")
                     else:
-                        
-                        print("[server] ERROR: первое сообщение без student_name=")
-                        student_name = "UNKNOWN"
-                        student_group = "UNKNOWN"
-                        student_number = "UNKNOWN"
+                        print(
+                            "[server] ERROR: первое сообщение должно содержать "
+                            "student_name, student_group и student_number"
+                        )
                         response = (
-                            "ERROR: invalid first message (need student metadata)."
+                            "ERROR: invalid first message "
+                            "(need student_name, student_group, student_number)."
                         ).encode("utf-8")
+                        json_write(w, {"ciphertext_hex": xor_bytes(response, key).hex()})
+                        print("[server] error response sent, closing connection")
+                        break
                 else:
                     # Последующие сообщения — произвольный текст чата
                     response = f"ECHO: {plaintext}".encode("utf-8")

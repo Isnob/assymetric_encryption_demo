@@ -5,7 +5,7 @@ import socket
 from dh_utils import derive_key_material, public_component, shared_secret, xor_bytes
 
 HOST = "127.0.0.1"
-PORT = 5000
+PORT = 5050
 
 
 def json_write(w, obj: dict) -> None:
@@ -29,14 +29,14 @@ def is_valid_student_name(student_name: str) -> bool:
     - letters only (space and hyphen allowed)
     - must NOT contain ';' or '='
     """
-    if len(?????) < ????:
+    if len(student_name) < 2:
         return False
-    if ";" ???? student_name or "=" ????? student_name:
+    if ";" in student_name or "=" in student_name:
         return False
     for ch in student_name:
         if ch.isalpha() or ch in {" ", "-"}:
             continue
-        return ????
+        return False
     return True
 
 
@@ -88,7 +88,7 @@ def main() -> None:
             f"student_group={student_group}; "
             f"student_number={student_number}; "
             f"message=Hello from client (encrypted)."
-        ).????("utf-8")
+        ).encode("utf-8")
 
         json_write(w, {"ciphertext_hex": xor_bytes(first_msg, key).hex()})
         enc_response = json_read(r)
@@ -97,7 +97,7 @@ def main() -> None:
         )
         
         #TODO
-        print(f"[client] decrypted server response: {response_pt.????('utf-8')}")
+        print(f"[client] decrypted server response: {response_pt.decode('utf-8')}")
 
         while True:
             text = input("[client] сообщение> ").strip()
@@ -112,5 +112,5 @@ def main() -> None:
             print(f"[client] ответ сервера: {out.decode('utf-8')}")
 
 
-if __name__ == "????":
-    ????
+if __name__ == "__main__":
+    main()
